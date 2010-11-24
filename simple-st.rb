@@ -13,7 +13,9 @@ class SegmentTree
   end
   #actualiza en el arbol un valor de la lista de numeros
   def update(pos, by)
-    node = 0, left = 0, right = @n - 1 #intervalo inicial [0, n -1]
+    node = 0
+    left = 0
+    right = @n - 1 #intervalo inicial [0, n -1]
     while left != right
       #mientras tengamos que dividir el intervalo actual
       @tree[node] += by
@@ -60,4 +62,4 @@ s = SegmentTree.new(10)
 for i in 0...10
   s.update(i,i+1)
 end
-puts s.query(0,9)
+puts s.sum(0,9)
