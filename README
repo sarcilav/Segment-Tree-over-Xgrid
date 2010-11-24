@@ -1,1 +1,6 @@
 This is an algorithm for Range Sum Query, that will runs on a cluster distributed by xgrid
+
+Run:
+xgrid -h localhost -job submit -in $PWD doit
+Retrieve:
+sudo xgrid -h localhost -job results -id 114
