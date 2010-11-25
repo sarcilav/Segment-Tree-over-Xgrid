@@ -29,7 +29,12 @@ class SegmentTree
     end
     @tree[node] += by
   end
-  
+  def output
+    f = File.open "tree" , "w"
+    f.puts @tree.inspect
+    f.flush
+    f.close
+  end
   
   #determina la suma de los elementos del intervalo [from, to]
   #la funcion es tal que node representa el intervalo [left, right] 
@@ -41,27 +46,19 @@ class SegmentTree
     end
     mid = (left + right) / 2
     res = 0
-    f = File.open "tree" , "w"
-    f.puts @tree.inspect
-    f.flush
-    f.close
+   
     a = Thread.new do
       if from <= mid #si necesitamos ir por la izquierda
-        res += `xgrid -h mela.local -job run -in . ./agent_st.rb "#{from}" "#{min(to, mid)}" "#{node * 2 + 1}" "#{left}" "#{mid}"`.to_i
+        res += `xgrid -h mela.local -job run -in ./agent ./agent_st.rb "#{from}" "#{min(to, mid)}" "#{node * 2 + 1}" "#{left}" "#{mid}"`.to_i
       end      
     end
     b = Thread.new do
       if to > mid #si necesitamos ir por la derecha
-        res += `xgrid -h mela.local -job run -in . ./agent_st.rb "#{max(mid + 1, from)}" "#{to}" "#{node * 2 + 2}" "#{mid + 1}" "#{right}"`.to_i
+        res += `xgrid -h mela.local -job run -in ./agent ./agent_st.rb "#{max(mid + 1, from)}" "#{to}" "#{node * 2 + 2}" "#{mid + 1}" "#{right}"`.to_i
       end
     end
-    f = File.open "output" , "w"
-    f.puts "waiting for a with (#{from}, #{to}, #{node} , #{left}, #{right})"
-    f.flush
     a.join
-    f.puts "waiting for b with (#{from}, #{to}, #{node} , #{left}, #{right})"
     b.join
-    f.close
     return res
   end
   
@@ -72,13 +69,18 @@ class SegmentTree
     end
   end
 end
-s = SegmentTree.new(100)
-for i in 0...100
+s = SegmentTree.new(100000)
+for i in 0...100000
   s.update(i,i+1)
 end
-puts s.sum(0,9)
-puts s.sum(0,19)
-puts s.sum(0,29)
-puts s.sum(0,59)
-puts s.sum(0,99)
-puts s.sum(19,99)
+#s.output
+puts "lets do some shit"
+a = Thread.new { puts " sum(0,90) #{s.sum(0,90)}" }
+b = Thread.new { puts " sum(0,1900) #{s.sum(0,1900)}" }
+c = Thread.new { puts " sum(0,29000) #{s.sum(0,29000)}" }
+d = Thread.new { puts " sum(0,59000) #{s.sum(0,59000)}" }
+e = Thread.new { puts " sum(0,99000) #{s.sum(0,99000)}" }
+f = Thread.new { puts " sum(19000,99000) #{s.sum(19000,99000)}" }
+[a,b,c,d,e,f].each do |x|
+  x.join
+end

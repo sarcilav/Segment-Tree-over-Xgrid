@@ -10,7 +10,7 @@ class SegmentTree
   #la funcion es tal que node representa el intervalo [left, right] 
   #y [from, to] siempre es subconjunto de [left, right]
   def self.sum(from, to, node , left, right)
-    tree = eval File.open("tree").gets
+    tree = eval File.open("/tmp/xgrid_tree").gets
     if from == left and to == right
       # si el segmento [left, right] es parte de lo que queremos sumar
       return tree[node]
