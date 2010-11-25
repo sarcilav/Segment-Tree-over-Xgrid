@@ -27,8 +27,8 @@ class SegmentTree
         node = node * 2 + 2 #hijo de la derecha [mid + 1, right]
         left = mid + 1
       end
-      @tree[node] += by
     end
+    @tree[node] += by
   end
   
   

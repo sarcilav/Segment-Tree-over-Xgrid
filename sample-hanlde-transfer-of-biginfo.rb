@@ -2,3 +2,4 @@
 bigfile = File.open "bigfile"
 a = eval bigfile.gets
 puts a.count
+puts a.inspect
