@@ -2,8 +2,7 @@ class SegmentTree
   attr_accessor :n, :tree
   def initialize(n = 100000)
     @n = n
-    @tree = Array.new(n * 4)
-    init
+    @tree = Array.new(n * 4,0)
   end
   def max(a,b)
     a > b ? a : b
