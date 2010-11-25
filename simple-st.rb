@@ -41,12 +41,27 @@ class SegmentTree
     end
     mid = (left + right) / 2
     res = 0
-    if from <= mid #si necesitamos ir por la izquierda
-      res += sum(from, min(to, mid), node * 2 + 1, left, mid)
+    f = File.open "tree" , "w"
+    f.puts @tree.inspect
+    f.flush
+    f.close
+    a = Thread.new do
+      if from <= mid #si necesitamos ir por la izquierda
+        res += `xgrid -h mela.local -job run -in . ./agent_st.rb "#{from}" "#{min(to, mid)}" "#{node * 2 + 1}" "#{left}" "#{mid}"`.to_i
+      end      
     end
-    if to > mid #si necesitamos ir por la derecha
-      res += sum(max(mid + 1, from), to, node * 2 + 2, mid + 1, right)
+    b = Thread.new do
+      if to > mid #si necesitamos ir por la derecha
+        res += `xgrid -h mela.local -job run -in . ./agent_st.rb "#{max(mid + 1, from)}" "#{to}" "#{node * 2 + 2}" "#{mid + 1}" "#{right}"`.to_i
+      end
     end
+    f = File.open "output" , "w"
+    f.puts "waiting for a with (#{from}, #{to}, #{node} , #{left}, #{right})"
+    f.flush
+    a.join
+    f.puts "waiting for b with (#{from}, #{to}, #{node} , #{left}, #{right})"
+    b.join
+    f.close
     return res
   end
   
@@ -57,8 +72,13 @@ class SegmentTree
     end
   end
 end
-s = SegmentTree.new(10)
-for i in 0...10
+s = SegmentTree.new(100)
+for i in 0...100
   s.update(i,i+1)
 end
 puts s.sum(0,9)
+puts s.sum(0,19)
+puts s.sum(0,29)
+puts s.sum(0,59)
+puts s.sum(0,99)
+puts s.sum(19,99)
